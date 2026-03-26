@@ -9,7 +9,7 @@ public class AvatarCanvasSetup : MonoBehaviour
     private const string CANVAS_NAME = "AvatarEditingCanvas";
     private const float POLL_INTERVAL = 0.2f;
 
-    private readonly Vector3 targetPosition = new Vector3(-0.88f, 1.8f, 2.5f);
+    private readonly Vector3 targetPosition = new Vector3(-0.80f, 1.8f, 0.67f);
 
     void Start()
     {
@@ -33,7 +33,7 @@ public class AvatarCanvasSetup : MonoBehaviour
     private void SetupCanvas(GameObject canvasObject)
     {
         // Set position
-        canvasObject.transform.position = targetPosition;
+        // canvasObject.transform.position = targetPosition;
 
         // Set to World Space
         Canvas canvas = canvasObject.GetComponent<Canvas>();
@@ -52,7 +52,7 @@ public class AvatarCanvasSetup : MonoBehaviour
         RectTransform rectTransform = canvasObject.GetComponent<RectTransform>();
         if (rectTransform != null)
         {
-            rectTransform.sizeDelta = new Vector2(730f, 844f);
+            rectTransform.sizeDelta = new Vector2(390f, 600f);
             rectTransform.localPosition = targetPosition;
         }
 
