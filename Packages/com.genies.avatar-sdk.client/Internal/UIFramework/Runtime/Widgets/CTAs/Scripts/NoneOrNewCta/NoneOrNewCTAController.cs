@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -92,7 +93,25 @@ namespace Genies.UI.Widgets
                     break;
                 case CTAButtonType.CustomizeCTA:
                     CustomizeCTAConfig.GameObject.SetActive(true);
+
+                    ZToOne(transform);
+                    var child = CustomizeCTAConfig.GameObject.transform.Find("Title");
+                    ZToOne(child);
+                    child = transform.Find("CustomizeCTA");
+                    ZToOne(child);
+                    
                     break;
+            }
+        }
+
+        private void ZToOne(Transform t)
+        {
+            if (t != null)
+            {
+                var rt = t.GetComponent<RectTransform>();
+                var scale = rt.localScale;
+                scale.z = 1f;
+                rt.localScale = scale;
             }
         }
 
