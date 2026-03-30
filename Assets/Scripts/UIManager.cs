@@ -117,6 +117,9 @@ public class UIManager : MonoBehaviour
     [Header("RotateTargets")]
     public string cloneNameTarget = "NativeGenie(Clone)";
     public float checkIntervalRotation = 1.0f;
+    [Tooltip("Assign a TMP font asset that includes ↺ ↻ (U+21BA / U+21BB) for the rotation gizmo.")]
+    public TMP_FontAsset rotationGizmoFont;
+    
 
     // Optional: If NativeGenie(Clone) always spawns under a specific parent, 
     // put the parent's name here to heavily optimize the search.
@@ -481,6 +484,12 @@ public class UIManager : MonoBehaviour
         }
 
         watcher.onRotationEnded = HandleGenieRotationEnded;
+
+        if (genie.GetComponent<AvatarRotator>() == null)
+        {
+            AvatarRotator rotator = genie.AddComponent<AvatarRotator>();
+            rotator.gizmoFont = rotationGizmoFont;
+        }
     }
 
     private void HandleGenieRotationEnded(GameObject genieObj)

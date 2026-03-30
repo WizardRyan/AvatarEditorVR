@@ -35,6 +35,7 @@
   <Project Path="UniTask.Linq.csproj" />
   <Project Path="Genies.Sdk.Avatar.Samples.StarterScenes.csproj" />
   <Project Path="Genies.CrashReporting.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Genies.Avatars.Behaviors.csproj" />
   <Project Path="Genies.Addressables.csproj" />
   <Project Path="Genies.Components.ShaderlessTools.csproj" />
@@ -49,7 +50,6 @@
   <Project Path="Genies.Sdk.Avatar.Telemetry.Editor.csproj" />
   <Project Path="Genies.ABTesting.csproj" />
   <Project Path="Genies.Naf.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="XNodeEditor.csproj" />
   <Project Path="Newtonsoft.Json.UnityConverters.Mathematics.csproj" />
   <Project Path="UMI.Runtime.csproj" />

@@ -129,6 +129,9 @@ public class MainManager : MonoBehaviour
     private DateTime _endTime;
 
     private string _lastKnownDefinition;
+
+    private bool _finishedEditingPressed = false;
+
     private Coroutine _definitionPollCoroutine;
 
     void Start()
@@ -160,6 +163,7 @@ public class MainManager : MonoBehaviour
     {
         try
         {
+            _finishedEditingPressed = true;
             // Stop polling when editing is finished
             StopDefinitionPolling();
 
@@ -169,7 +173,7 @@ public class MainManager : MonoBehaviour
             Debug.Log("2. Processing Test Run Data...");
             ProcessTestRun();
             
-            await AvatarSdk.CloseAvatarEditorAsync(true);
+            await AvatarSdk.CloseAvatarEditorAsync(false);
             _UIManager.ShowSurvey();
         }
         catch (Exception e)
@@ -251,6 +255,15 @@ public class MainManager : MonoBehaviour
 
         // filter out color actions since they are already captured by avatar definition changes
         _testRun.action_log = _testRun.action_log.Where(ev => ev.Action_type != EditorLogEvent.ActionType.select_color.ToString()).ToList();
+
+        // remove the first and last rotate_view events
+        string rotateType = EditorLogEvent.ActionType.rotate_view.ToString();
+        int firstRotate = _testRun.action_log.FindIndex(ev => ev.Action_type == rotateType);
+        if (firstRotate >= 0)
+            _testRun.action_log.RemoveAt(firstRotate);
+        int lastRotate = _testRun.action_log.FindLastIndex(ev => ev.Action_type == rotateType);
+        if (lastRotate >= 0)
+            _testRun.action_log.RemoveAt(lastRotate);
         // _testRun.base_gender = _UIManager.GetBaseGender();
     }
 
@@ -434,6 +447,7 @@ public class MainManager : MonoBehaviour
 
     public void AddRotateViewEvent(string newEulerAngles)
     {
+        if(_finishedEditingPressed) return; 
         _testRun.action_log.Add(new EditorLogEvent 
         {
             Timestamp = TimeStampNow(),
