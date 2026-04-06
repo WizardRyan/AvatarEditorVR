@@ -93,6 +93,7 @@ public class UIManager : MonoBehaviour
     // [SerializeField] private GameObject _dropdownBaseGender;
     [SerializeField] private GameObject _surveyCanvas;
     [SerializeField] private GameObject _mainCanvas;
+    [SerializeField] private GameObject _targetImageCanvas;
     [SerializeField] private GameObject _dropDownSurveyQuestion1;
     [SerializeField] private GameObject _dropDownSurveyQuestion2;
     [SerializeField] private GameObject _buttonUploadResults;
@@ -153,6 +154,7 @@ public class UIManager : MonoBehaviour
         _dropDownSurveyQuestion2.GetComponent<TMP_Dropdown>().onValueChanged.AddListener(delegate { DropdownSurveyQuestion2ValueChanged(); });
         _uploadSuccessMessage.text = "";
         _surveyCanvas.SetActive(false);
+        _targetImageCanvas.SetActive(false);
     }
     public void LoadReferenceImages()
     {
@@ -167,8 +169,8 @@ public class UIManager : MonoBehaviour
 #endif
 
             //TODO: Change this to reference images
-            LoadAndAssign(_targetImagePortrait, Path.Combine(basePath, "Captured_Portrait.png"));
-            LoadAndAssign(_targetImageBody, Path.Combine(basePath, "Captured_BodyFront.png"));
+            // LoadAndAssign(_targetImagePortrait, Path.Combine(basePath, "Captured_Portrait.png"));
+            // LoadAndAssign(_targetImageBody, Path.Combine(basePath, "Captured_BodyFront.png"));
 
         }
         catch (Exception ex)
@@ -317,7 +319,47 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(PollForNewNodesRoutine());
         _buttonFinishedEditing.SetActive(true);
+        _targetImageCanvas.SetActive(true);
+        SetTargetImageCanvasImages();
         StartCoroutine(PollForGeniesRoutine());
+    }
+
+    private void SetTargetImageCanvasImages()
+    {
+        string prefix;
+        switch (_targetImage)
+        {
+            case 1:
+                prefix = "easy";
+                break;
+            case 2:
+                prefix = "hard";
+                break;
+            default:
+                return;
+        }
+
+        RawImage portrait = _targetImageCanvas.transform.GetChild(0).GetComponent<RawImage>();
+        RawImage body = _targetImageCanvas.transform.GetChild(1).GetComponent<RawImage>();
+
+        LoadAndAssignRaw(portrait, Path.Combine(Application.streamingAssetsPath, $"{prefix}_avatar_portrait_1_1.png"));
+        LoadAndAssignRaw(body, Path.Combine(Application.streamingAssetsPath, $"{prefix}_avatar_body_1_1.png"));
+    }
+
+    private void LoadAndAssignRaw(RawImage targetImage, string filePath)
+    {
+        if (targetImage == null) return;
+
+        if (!File.Exists(filePath))
+        {
+            Debug.LogWarning($"File not found: {filePath}");
+            return;
+        }
+
+        byte[] bytes = File.ReadAllBytes(filePath);
+        Texture2D texture = new(2, 2);
+        texture.LoadImage(bytes);
+        targetImage.texture = texture;
     }
 
     private void HideEditorOpenUI()
