@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.EventSystems; // Required for raw UI pointer events
+using UnityEngine.Networking;
 
 public class RawUIClickCatcher : MonoBehaviour, IPointerClickHandler
 {
@@ -342,24 +342,26 @@ public class UIManager : MonoBehaviour
         RawImage portrait = _targetImageCanvas.transform.GetChild(0).GetComponent<RawImage>();
         RawImage body = _targetImageCanvas.transform.GetChild(1).GetComponent<RawImage>();
 
-        LoadAndAssignRaw(portrait, Path.Combine(Application.streamingAssetsPath, $"{prefix}_avatar_portrait_1_1.png"));
-        LoadAndAssignRaw(body, Path.Combine(Application.streamingAssetsPath, $"{prefix}_avatar_body_1_1.png"));
+        StartCoroutine(LoadAndAssignRaw(portrait, $"{prefix}_avatar_portrait_1_1.png"));
+        StartCoroutine(LoadAndAssignRaw(body, $"{prefix}_avatar_body_1_1.png"));
     }
 
-    private void LoadAndAssignRaw(RawImage targetImage, string filePath)
+    private IEnumerator LoadAndAssignRaw(RawImage targetImage, string fileName)
     {
-        if (targetImage == null) return;
+        if (targetImage == null) yield break;
 
-        if (!File.Exists(filePath))
+        string url = Path.Combine(Application.streamingAssetsPath, fileName);
+        // On Android the path is a jar:file:// URI; UnityWebRequest handles all platforms correctly.
+        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogWarning($"File not found: {filePath}");
-            return;
+            Debug.LogWarning($"Failed to load image '{fileName}': {request.error}");
+            yield break;
         }
 
-        byte[] bytes = File.ReadAllBytes(filePath);
-        Texture2D texture = new(2, 2);
-        texture.LoadImage(bytes);
-        targetImage.texture = texture;
+        targetImage.texture = DownloadHandlerTexture.GetContent(request);
     }
 
     private void HideEditorOpenUI()
