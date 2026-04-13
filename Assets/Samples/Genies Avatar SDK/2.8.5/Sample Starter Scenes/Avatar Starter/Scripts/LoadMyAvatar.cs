@@ -89,15 +89,18 @@ namespace Genies.Sdk.Samples.AvatarStarter
 
         private void Start()
         {
+            AvatarSdk.Events.AvatarEditorOpened += OnAvatarEditorOpened;
+            AvatarSdk.Events.AvatarEditorClosed += OnAvatarEditorClosed;
+            AvatarSdk.Events.UserLoggedOut += OnUserLoggedOut;
+
             if (!AvatarSdk.IsLoggedIn)
             {
                 AvatarSdk.Events.UserLoggedIn += OnUserLoggedIn;
-                AvatarSdk.Events.AvatarEditorOpened += OnAvatarEditorOpened;
-                AvatarSdk.Events.AvatarEditorClosed += OnAvatarEditorClosed;
-                AvatarSdk.Events.UserLoggedOut += OnUserLoggedOut;
-
                 return;
             }
+
+            // Already logged in (e.g. after scene reload) — load the avatar immediately.
+            LoadAvatarAsync().Forget();
         }
 
         private void OnUserLoggedOut()
