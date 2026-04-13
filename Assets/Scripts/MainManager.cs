@@ -134,6 +134,8 @@ public class MainManager : MonoBehaviour
 
     private bool _hiddenAvatarOnce = false;
 
+    private int _rotatededAvatarCount = 0;
+
     private Coroutine _definitionPollCoroutine;
 
     void Start()
@@ -274,10 +276,10 @@ public class MainManager : MonoBehaviour
         _testRun.action_log = _testRun.action_log.Where(ev => ev.Action_type != EditorLogEvent.ActionType.select_color.ToString()).ToList();
 
         // remove the first rotate_view event
-        string rotateType = EditorLogEvent.ActionType.rotate_view.ToString();
-        int firstRotate = _testRun.action_log.FindIndex(ev => ev.Action_type == rotateType);
-        if (firstRotate >= 0)
-            _testRun.action_log.RemoveAt(firstRotate);
+        // string rotateType = EditorLogEvent.ActionType.rotate_view.ToString();
+        // int firstRotate = _testRun.action_log.FindIndex(ev => ev.Action_type == rotateType);
+        // if (firstRotate >= 0)
+        //     _testRun.action_log.RemoveAt(firstRotate);
         // int lastRotate = _testRun.action_log.FindLastIndex(ev => ev.Action_type == rotateType);
         // if (lastRotate >= 0)
         //     _testRun.action_log.RemoveAt(lastRotate);
@@ -478,14 +480,24 @@ public class MainManager : MonoBehaviour
     public void AddRotateViewEvent(string newEulerAngles)
     {
         if(_finishedEditingPressed) return; 
-        _testRun.action_log.Add(new EditorLogEvent 
+
+        if(_rotatededAvatarCount < 1)
         {
-            Timestamp = TimeStampNow(),
-            Action_type = EditorLogEvent.ActionType.rotate_view.ToString(),
-            Parameter = "",
-            New_Value = ""
-        });
-        _testRun.num_actions_taken++;
+            _rotatededAvatarCount++;
+            _UIManager.RotateAvatar180();
+        }
+        else if(_rotatededAvatarCount > 2)
+        {
+            _testRun.action_log.Add(new EditorLogEvent 
+            {
+                Timestamp = TimeStampNow(),
+                Action_type = EditorLogEvent.ActionType.rotate_view.ToString(),
+                Parameter = "",
+                New_Value = ""
+            });
+            _testRun.num_actions_taken++;
+        }
+        _rotatededAvatarCount++;
     }
 
     public long TimeStampNow()

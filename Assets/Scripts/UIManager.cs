@@ -390,6 +390,15 @@ public class UIManager : MonoBehaviour
         _uploadSuccessMessage.text = "Upload Failed. Please Check Your Connection.";
     }
 
+    public void RotateAvatar180()
+    {
+        GameObject genie = GameObject.Find(cloneNameTarget);
+        if (genie != null)
+        {
+            genie.transform.Rotate(0, 180, 0);
+        }
+    }
+
     private IEnumerator PollForNewNodesRoutine()
     {
         while (true)
