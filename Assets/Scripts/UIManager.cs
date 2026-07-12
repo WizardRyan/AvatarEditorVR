@@ -168,10 +168,6 @@ public class UIManager : MonoBehaviour
                 basePath = Path.Combine(Application.persistentDataPath, "CharacterShots");
 #endif
 
-            //TODO: Change this to reference images
-            // LoadAndAssign(_targetImagePortrait, Path.Combine(basePath, "Captured_Portrait.png"));
-            // LoadAndAssign(_targetImageBody, Path.Combine(basePath, "Captured_BodyFront.png"));
-
         }
         catch (Exception ex)
         {
@@ -334,6 +330,9 @@ public class UIManager : MonoBehaviour
                 break;
             case 2:
                 prefix = "hard";
+                break;
+            case 3:
+                prefix = "warmup";
                 break;
             default:
                 return;
