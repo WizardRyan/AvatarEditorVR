@@ -338,11 +338,13 @@ public class UIManager : MonoBehaviour
                 return;
         }
 
-        RawImage portrait = _targetImageCanvas.transform.GetChild(0).GetComponent<RawImage>();
-        RawImage body = _targetImageCanvas.transform.GetChild(1).GetComponent<RawImage>();
+        RawImage side = _targetImageCanvas.transform.GetChild(0).GetComponent<RawImage>();
+        RawImage portrait = _targetImageCanvas.transform.GetChild(1).GetComponent<RawImage>();
+        RawImage body = _targetImageCanvas.transform.GetChild(2).GetComponent<RawImage>();
 
         StartCoroutine(LoadAndAssignRaw(portrait, $"{prefix}_avatar_portrait_1_1.png"));
         StartCoroutine(LoadAndAssignRaw(body, $"{prefix}_avatar_body_1_1.png"));
+        StartCoroutine(LoadAndAssignRaw(side, $"{prefix}_avatar_side_1_1.png"));
     }
 
     private IEnumerator LoadAndAssignRaw(RawImage targetImage, string fileName)
